@@ -3,13 +3,15 @@ import os, sys, argparse, json, csv
 
 
 def main():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("inputfile", help="the json file containing trello board data")
-	parser.add_argument("--outputfile", help="the json file containing trello board data")
-	args = parser.parse_args()
-	f = open(args.inputfile)
-	json_object = json.load(f)
-	print_cards(json_object, args.outputfile)
+	#parser = argparse.ArgumentParser()
+	#parser.add_argument("inputfile", help="the json file containing trello board data")
+	#parser.add_argument("--outputfile", help="the json file containing trello board data")
+	#args = parser.parse_args()
+	#f = open(args.inputfile)
+	inputfile = 'trellofwp2.json'
+	f = open(inputfile)
+	json_object = json.load(f, encoding="ISO-8859-1")
+	print_cards(json_object, 'trello.csv')
 	
 
 
@@ -40,6 +42,14 @@ def print_cards(json_object, outputfile):
 				action['type'] == 'commentCard'):
 				comments.append(action['data']['text'])
 		return '\n'.join(comments)
+
+	def status(card):
+		if card['closed']:
+			return 'Archived'
+		else:
+			for single_list in json_object['lists']:
+				if single_list['id'] == card['idList']:
+					return single_list['name']
 
 	def labels(card):
 		label = ''
@@ -79,11 +89,12 @@ def print_cards(json_object, outputfile):
 		filename = 'output.csv'
 	with open(filename, 'wb') as csvfile:
 		writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-		writer.writerow(['ID', 'Story', 'Description', 'Checklist', 'Comments', 'Labels', 'Due Date', 'Members'])
+		writer.writerow(['ID', 'Story', 'Status', 'Description', 'Checklist', 'Comments', 'Labels', 'Due Date', 'Members'])
 		for card in cards:
 			writer.writerow([
 				card['idShort'], 
 				safe_string(card['name']),
+				safe_string(status(card)),
 				safe_string(card['desc']), 
 				safe_string(checklist_data(card)),
 				safe_string(comments_data(card)), 
