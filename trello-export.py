@@ -3,13 +3,11 @@ import os, sys, argparse, json, csv
 
 
 def main():
-	#parser = argparse.ArgumentParser()
-	#parser.add_argument("inputfile", help="the json file containing trello board data")
-	#parser.add_argument("--outputfile", help="the json file containing trello board data")
-	#args = parser.parse_args()
-	#f = open(args.inputfile)
-	inputfile = 'trellofwp2.json'
-	f = open(inputfile)
+	parser = argparse.ArgumentParser()
+	parser.add_argument("inputfile", help="the json file containing trello board data")
+	parser.add_argument("--outputfile", help="the json file containing trello board data")
+	args = parser.parse_args()
+	f = open(args.inputfile)
 	json_object = json.load(f, encoding="ISO-8859-1")
 	print_cards(json_object, 'trello.csv')
 	
