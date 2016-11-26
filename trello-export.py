@@ -9,7 +9,7 @@ def main():
 	args = parser.parse_args()
 	f = open(args.inputfile)
 	json_object = json.load(f, encoding="ISO-8859-1")
-	print_cards(json_object, 'trello.csv')
+	print_cards(json_object, args.outputfile)
 	
 
 
